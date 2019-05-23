@@ -42,6 +42,11 @@ int main(void)
     TIFR2=(1<<TOV2);
     TIMSK2=(1<<TOIE2);  //timer2 interrupt enable
 
+    ACSR=0b10000000;    //comparator disable
+    ADCSRB=0b00000000;
+    ADCSRA=0b00000111;  //ADC disable //prescaler 128
+    ADMUX=0b11000000;   //internal Vref //channel 0
+
     max7219_init();
     max7219_brightness(3);
 
@@ -74,10 +79,5 @@ int main(void)
             shiftscr=1;
             if(max7219_shift()==0) dupd=0;
             }
-
-
-
-
-
+        }
     }
-}
