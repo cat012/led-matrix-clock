@@ -1,6 +1,6 @@
-//19-May-2019
-
-
+// main.c
+//
+// 23-May-2019
 
 
 
@@ -10,9 +10,8 @@ extern uint8_t rtc[8];   //ds1307 data
 
 char strbuff[16];  //string buffer
 
-
-
 volatile uint8_t shiftscr=0;  //flag
+
 
 
 //=============================================================================

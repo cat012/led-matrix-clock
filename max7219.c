@@ -1,4 +1,4 @@
-// matrix7219.c
+// max7219.c
 //
 // 23-05-2019
 //
@@ -7,8 +7,6 @@
 #include "max7219.h"
 
 
-
-#define MAX7219_BUFF_SIZE 5*8
 
 uint8_t max7219buff[MAX7219_BUFF_SIZE] = {};
 

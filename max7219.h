@@ -26,6 +26,9 @@
 #include "bitm.h"
 
 
+#define MAX7219_BUFF_SIZE 5*8
+
+
 /////////////////////////////////////////////////
 
 #define DT_BIT   7
@@ -80,7 +83,7 @@ uint8_t max7219_shift(void);
 
 
 
-
 #endif /* MAX7219_H_ */
+
 
 
