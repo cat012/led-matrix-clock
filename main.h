@@ -1,6 +1,6 @@
 // main.h
 //
-// atmega328p fuses: 7f df 05
+// atmega328p fuses: 7f df 06
 //
 // avr8-gnu-toolchain-3.6.1.1752-win32
 //
