@@ -1,6 +1,6 @@
 // main.c
 //
-// 23-May-2019
+// 24-May-2019
 //
 
 
@@ -132,8 +132,7 @@ int main(void)
             {
             scrcnt=MENU_TIME;
             if(scrmode==1) max7219_update(8);
-            if(scrmode==2) max7219_update(20);
-            if(scrmode==3) max7219_update(20);
+            if(scrmode==2 || scrmode==3) max7219_update(20);
             dupd=0;
             }
 

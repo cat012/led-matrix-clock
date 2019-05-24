@@ -1,6 +1,6 @@
 // max7219.c
 //
-// 23-05-2019
+// 24-05-2019
 //
 
 
@@ -144,6 +144,5 @@ void max7219_init(void)
 
     max7219_write(0x0C, 0x01);  //Shutdown Register      //normal operation
     }
-
 
 

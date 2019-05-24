@@ -2,9 +2,12 @@
 //
 // atmega328p fuses: 7f df 06
 //
+// Program:    3974 bytes (12.1% Full)
+// Data:         87 bytes (4.2% Full)
+//
 // avr8-gnu-toolchain-3.6.1.1752-win32
 //
-// (^^)~  23-05-2019
+// (^^)~  24-05-2019
 //
 
 
@@ -66,5 +69,7 @@
 
 
 #endif /* MAIN_H_ */
+
+
 
 
