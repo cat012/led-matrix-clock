@@ -86,7 +86,7 @@ uint8_t check_keys(void)
 //-----------------------------------------------------------------------------
 int main(void)
     {
-    L2_INIT;
+    BOARDLED_INIT;
 
     sei();
 
