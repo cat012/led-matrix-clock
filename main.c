@@ -113,16 +113,8 @@ int main(void)
     i2c_init();
     rtc_init();
 
-//todo  clock set
-
-//delay_ms(2000);
-
-//rtc_set_hrs(13);
-//rtc_set_min(54);
-//rtc_set_sec(00);
-
     uint8_t dupd=0; //flag
-
+    uint8_t srst=0; //flag
     uint8_t scrmode=0;
 
     while(1)
@@ -132,25 +124,23 @@ int main(void)
             dupd=1;
             rtc_read(rtc);
 
-            if(scrmode==1) sprintf(strbuff, "%02u", rtc[HOURS_REG]);
-            if(scrmode==2) sprintf(strbuff, "%02u", rtc[MINUTES_REG]);
-            if(scrmode==3) sprintf(strbuff, "%02u", rtc[SECONDS_REG]);
-
-            if(scrmode==0) sprintf(strbuff, "%02u:%02u", rtc[HOURS_REG], rtc[MINUTES_REG]);
+            sprintf(strbuff, "%02u:%02u", rtc[HOURS_REG], (scrmode==3)?rtc[SECONDS_REG]:rtc[MINUTES_REG]);
             max7219_buff_print(8,strbuff);
             }
 
         if(scrmode>0 && scrcnt==0)
             {
             scrcnt=MENU_TIME;
-            max7219_update(8);
+            if(scrmode==1) max7219_update(8);
+            if(scrmode==2) max7219_update(20);
+            if(scrmode==3) max7219_update(20);
             dupd=0;
             }
 
         if(scrmode==0 && scrcnt==0)
             {
             scrcnt=SHIFT_TIME;
-            if(max7219_shift()==0) dupd=0;
+            if(max7219_shift(&srst)==0) dupd=0;
             }
 
         uint8_t key=check_keys();
@@ -159,7 +149,7 @@ int main(void)
             {
             default: break;
             case 0: break;
-            case 1: dupd=0; scrcnt=0; if(++scrmode>3) scrmode=0; break;
+            case 1: dupd=0; scrcnt=0; if(++scrmode>3) { scrmode=0; srst=1; } break;
             case 2: break;
             case 3: break;
             case 4: dupd=0;

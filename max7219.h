@@ -79,7 +79,7 @@ void max7219_buff_char(uint8_t xpos, uint8_t code);
 void max7219_buff_print(uint8_t xpos, const char *str);
 
 void max7219_update(uint8_t xpos);
-uint8_t max7219_shift(void);
+uint8_t max7219_shift(uint8_t *reset);
 
 
 

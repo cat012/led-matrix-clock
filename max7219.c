@@ -101,9 +101,11 @@ void max7219_update(uint8_t xpos)
 
 
 //-------------------------------------------------------------------------------------------------
-uint8_t max7219_shift(void)
+uint8_t max7219_shift(uint8_t *reset)
     {
     static uint8_t cnt=0;
+
+    if(*reset) *reset=cnt=0;
 
     max7219_update(cnt);
 
