@@ -1,6 +1,6 @@
 // main.c
 //
-// 24-May-2019
+// 26-May-2019
 //
 
 
@@ -30,14 +30,14 @@ ISR(TIMER2_OVF_vect)  //Timer2 interrupt
 uint16_t get_adc(uint8_t admux)
     {
     uint16_t adc=0;
-    ADMUX=admux;                    //channel
-    REG_BIT_SET(ADCSRA,ADSC);       //start ADC
-    while(REG_BIT_IS_CLR(ADCSRA,ADIF)); //wait the end of ADC
-    REG_BIT_SET(ADCSRA,ADIF);       //clear flag
-    REG_BIT_SET(ADCSRA,ADSC);       //start ADC
-    while(REG_BIT_IS_CLR(ADCSRA,ADIF)); //wait the end of ADC
+    ADMUX=admux;                         //set Vref and channel
+    REG_BIT_SET(ADCSRA,ADSC);            //start ADC
+    while(REG_BIT_IS_CLR(ADCSRA,ADIF));  //wait the end of ADC
+    REG_BIT_SET(ADCSRA,ADIF);            //clear flag
+    REG_BIT_SET(ADCSRA,ADSC);            //start ADC
+    while(REG_BIT_IS_CLR(ADCSRA,ADIF));  //wait the end of ADC
     adc=ADC;
-    REG_BIT_SET(ADCSRA,ADIF);       //clear flag
+    REG_BIT_SET(ADCSRA,ADIF);            //clear flag
     return adc;
     }
 
@@ -102,25 +102,27 @@ int main(void)
     ADMUX=0b11000000;   //internal Vref //channel 0
 
     ACSR=0b10000000;   //comparator disable
+
     ADCSRB=0x00;
     ADCSRA=0b10000111; //ADC enable //prescaler 128
     DIDR0=0b00000001;  //disable digital input
     ADMUX=0b01000000;  //Vref=Vcc //channel 0
 
     max7219_init();
-    max7219_brightness(3);
+    max7219_brightness(4);
 
     i2c_init();
     rtc_init();
 
     uint8_t dupd=0; //flag
-    uint8_t srst=0; //flag
     uint8_t scrmode=0;
+    uint8_t curpos=0;
 
     while(1)
         {
         if(dupd==0)
             {
+            //BOARDLED_ON;
             dupd=1;
             rtc_read(rtc);
 
@@ -139,7 +141,8 @@ int main(void)
         if(scrmode==0 && scrcnt==0)
             {
             scrcnt=SHIFT_TIME;
-            if(max7219_shift(&srst)==0) dupd=0;
+            max7219_shift(&curpos);
+            if(curpos==0) dupd=0;
             }
 
         uint8_t key=check_keys();
@@ -148,7 +151,7 @@ int main(void)
             {
             default: break;
             case 0: break;
-            case 1: dupd=0; scrcnt=0; if(++scrmode>3) { scrmode=0; srst=1; } break;
+            case 1: dupd=0; scrcnt=0; if(++scrmode>3) { scrmode=0; curpos=0; } break;
             case 2: break;
             case 3: break;
             case 4: dupd=0;

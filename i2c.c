@@ -1,6 +1,6 @@
 // i2c.c
 //
-// 23-05-2019
+// 26-05-2019
 //
 
 
@@ -68,7 +68,7 @@ void i2c_send_byte(uint8_t data)
 
 
 //-----------------------------------------------------------------------------
-uint8_t i2c_read_byte(uint8_t ask)
+uint8_t i2c_read_byte(uint8_t ack)
     {
     uint8_t data=0;
 
@@ -84,7 +84,7 @@ uint8_t i2c_read_byte(uint8_t ask)
         I2C_DELAY;
         }
 
-    if(ask==ACK) { SDA_NULL; }
+    if(ack==I2C_ACK) { SDA_NULL; }
     else { SDA_PULL; }
 
     I2C_DELAY;

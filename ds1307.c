@@ -30,9 +30,9 @@ void rtc_read(uint8_t *data)
 
     i2c_send_byte(DS1307 | READ);
 
-    for(uint8_t i=0; i<7; i++) data[i] = i2c_read_byte(ACK);
+    for(uint8_t i=0; i<7; i++) data[i] = i2c_read_byte(I2C_ACK);
 
-    data[7] = i2c_read_byte(NACK);
+    data[7] = i2c_read_byte(I2C_NACK);
 
     i2c_stop();
 
@@ -69,7 +69,7 @@ uint8_t rtc_read_reg(uint8_t addr)
     i2c_start();
     i2c_send_byte(DS1307 | READ);
 
-    uint8_t data = i2c_read_byte(NACK);
+    uint8_t data = i2c_read_byte(I2C_NACK);
 
     i2c_stop();
 

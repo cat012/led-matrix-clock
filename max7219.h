@@ -26,9 +26,6 @@
 #include "bitm.h"
 
 
-#define MAX7219_BUFF_SIZE 5*8
-
-
 /////////////////////////////////////////////////
 
 #define DT_BIT   7
@@ -65,6 +62,8 @@
 #define MAX7219_SERIAL_INIT  CS_SET; CS_OUT; CK_CLR; CK_OUT; DT_CLR; DT_OUT
 
 
+#define MAX7219_BUFF_SIZE 5*8
+
 
 extern const uint8_t font3x7[];
 
@@ -79,7 +78,7 @@ void max7219_buff_char(uint8_t xpos, uint8_t code);
 void max7219_buff_print(uint8_t xpos, const char *str);
 
 void max7219_update(uint8_t xpos);
-uint8_t max7219_shift(uint8_t *reset);
+void max7219_shift(uint8_t *cpos);
 
 
 

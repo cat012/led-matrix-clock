@@ -32,7 +32,7 @@ uint8_t ee_read(uint16_t addr)
     i2c_send_byte(addr);
     i2c_start();
     i2c_send_byte(EE_R);     //device address | read
-    data = i2c_read_byte(NACK);
+    data = i2c_read_byte(I2C_NACK);
     i2c_stop();
 
     return data;

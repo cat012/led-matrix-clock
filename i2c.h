@@ -2,7 +2,7 @@
 //
 // Software I2C
 //
-// 23-05-2019
+// 26-05-2019
 //
 
 
@@ -32,27 +32,27 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-#define SDA_INP  REG_BIT_CLR(I2C_DDR_REG, I2C_SDA_PIN)
-#define SDA_OUT  REG_BIT_SET(I2C_DDR_REG, I2C_SDA_PIN)
-#define SDA_SET  REG_BIT_SET(I2C_PORT_REG, I2C_SDA_PIN)
-#define SDA_CLR  REG_BIT_CLR(I2C_PORT_REG, I2C_SDA_PIN)
+#define SDA_INP  (REG_BIT_CLR(I2C_DDR_REG, I2C_SDA_PIN))
+#define SDA_OUT  (REG_BIT_SET(I2C_DDR_REG, I2C_SDA_PIN))
+#define SDA_SET  (REG_BIT_SET(I2C_PORT_REG, I2C_SDA_PIN))
+#define SDA_CLR  (REG_BIT_CLR(I2C_PORT_REG, I2C_SDA_PIN))
 
 #define SDA_PULL  SDA_INP; SDA_SET
 #define SDA_NULL  SDA_OUT; SDA_CLR
 
-#define SDA_IS_SET  REG_BIT_IS_SET(I2C_PIN_REG, I2C_SDA_PIN)
+#define SDA_IS_SET  (REG_BIT_IS_SET(I2C_PIN_REG, I2C_SDA_PIN))
 
-#define SCL_INP  REG_BIT_CLR(I2C_DDR_REG, I2C_SCL_PIN)
-#define SCL_OUT  REG_BIT_SET(I2C_DDR_REG, I2C_SCL_PIN)
-#define SCL_SET  REG_BIT_SET(I2C_PORT_REG, I2C_SCL_PIN)
-#define SCL_CLR  REG_BIT_CLR(I2C_PORT_REG, I2C_SCL_PIN)
+#define SCL_INP  (REG_BIT_CLR(I2C_DDR_REG, I2C_SCL_PIN))
+#define SCL_OUT  (REG_BIT_SET(I2C_DDR_REG, I2C_SCL_PIN))
+#define SCL_SET  (REG_BIT_SET(I2C_PORT_REG, I2C_SCL_PIN))
+#define SCL_CLR  (REG_BIT_CLR(I2C_PORT_REG, I2C_SCL_PIN))
 
 #define SCL_PULL  SCL_INP; SCL_SET
 #define SCL_NULL  SCL_OUT; SCL_CLR
 
 
-#define ACK  0
-#define NACK 1
+#define I2C_ACK   0
+#define I2C_NACK  1
 
 
 
@@ -60,7 +60,7 @@ void i2c_init(void);
 void i2c_start(void);
 void i2c_stop(void);
 void i2c_send_byte(uint8_t data);
-uint8_t i2c_read_byte(uint8_t ask);
+uint8_t i2c_read_byte(uint8_t ack);
 
 
 
