@@ -164,20 +164,23 @@ int main(void)
             {
             default: break;
             case 0: break;
-            case 1: dupd=0; scrcnt=0;  max7219_buff_pixel(13, 7, 0); if(++scrmode>4) { scrmode=0; curpos=0; } break;
+            case 1: dupd=0; scrcnt=0;  max7219_buff_pixel(13, 7, 0); if(++scrmode>4) { scrmode=0; curpos=0; }
+                    break;
             case 2: if(scrmode==4) { ee_write(4095,scrbright); max7219_buff_pixel(13, 7, 1); } break;
             case 3: if(scrmode==4) { ee_write(4095,scrbright); max7219_buff_pixel(13, 7, 1); } break;
             case 4: dupd=0; scrcnt=0;
                     if(scrmode==1) { int8_t tmp = rtc[2]; if(--tmp<0) tmp=59; rtc_set_hrs(tmp); }
                     if(scrmode==2) { int8_t tmp = rtc[1]; if(--tmp<0) tmp=59; rtc_set_min(tmp); }
                     if(scrmode==3) { rtc_set_sec(0); }
-                    if(scrmode==4) { int8_t tmp=scrbright; if(--tmp<0) tmp=0; scrbright=tmp;  max7219_buff_pixel(13, 7, 0); max7219_brightness(scrbright); }
+                    if(scrmode==4) { int8_t tmp=scrbright; if(--tmp<0) tmp=0; scrbright=tmp;
+                                     max7219_buff_pixel(13, 7, 0); max7219_brightness(scrbright); }
                     break;
             case 5: dupd=0; scrcnt=0;
                     if(scrmode==1) { uint8_t tmp = rtc[2]; if(++tmp>59) tmp=0; rtc_set_hrs(tmp); }
                     if(scrmode==2) { uint8_t tmp = rtc[1]; if(++tmp>59) tmp=0; rtc_set_min(tmp); }
                     if(scrmode==3) { rtc_set_sec(0); }
-                    if(scrmode==4) { uint8_t tmp=scrbright; if(++tmp>3) tmp=3; scrbright=tmp;  max7219_buff_pixel(13, 7, 0); max7219_brightness(scrbright); }
+                    if(scrmode==4) { uint8_t tmp=scrbright; if(++tmp>3) tmp=3; scrbright=tmp;
+                                     max7219_buff_pixel(13, 7, 0); max7219_brightness(scrbright); }
                     break;
             }
         }
