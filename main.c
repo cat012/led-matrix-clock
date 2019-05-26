@@ -109,7 +109,10 @@ int main(void)
     ADMUX=0b01000000;  //Vref=Vcc //channel 0
 
     max7219_init();
-    max7219_brightness(4);
+
+    uint8_t scrbright=ee_read(4095)&0b00000011;
+
+    max7219_brightness(scrbright);
 
     i2c_init();
     rtc_init();
@@ -122,27 +125,37 @@ int main(void)
         {
         if(dupd==0)
             {
-            //BOARDLED_ON;
             dupd=1;
             rtc_read(rtc);
-
-            sprintf(strbuff, "%02u:%02u", rtc[HOURS_REG], (scrmode==3)?rtc[SECONDS_REG]:rtc[MINUTES_REG]);
-            max7219_buff_print(8,strbuff);
+            sprintf(strbuff, "%02u:%02u", rtc[HOURS_REG], rtc[MINUTES_REG]);
+            max7219_buff_print(10,strbuff);
             }
 
-        if(scrmode>0 && scrcnt==0)
+        if(scrcnt==0)
             {
-            scrcnt=MENU_TIME;
-            if(scrmode==1) max7219_update(8);
-            if(scrmode==2 || scrmode==3) max7219_update(20);
-            dupd=0;
-            }
+            if(scrmode==0)
+                {
+                scrcnt=SHIFT_TIME;
+                max7219_shift(&curpos);
+                if(curpos==0) dupd=0;
+                }
+            else if(scrmode>0)
+                {
+                scrcnt=MENU_TIME;
 
-        if(scrmode==0 && scrcnt==0)
-            {
-            scrcnt=SHIFT_TIME;
-            max7219_shift(&curpos);
-            if(curpos==0) dupd=0;
+                uint8_t t=0;
+                if(scrmode==1) t=rtc[HOURS_REG];
+                if(scrmode==2) t=rtc[MINUTES_REG];
+                if(scrmode==3) t=rtc[SECONDS_REG];
+                if(scrmode==4) t=scrbright;
+
+                if(scrmode==1 || scrmode==2 || scrmode==3)  sprintf(strbuff, "%02u", t);
+                if(scrmode==4) sprintf(strbuff, "L%01u", t);
+
+                max7219_buff_print(10,strbuff);
+                max7219_update(10);
+                dupd=0;
+                }
             }
 
         uint8_t key=check_keys();
@@ -151,20 +164,20 @@ int main(void)
             {
             default: break;
             case 0: break;
-            case 1: dupd=0; scrcnt=0; if(++scrmode>3) { scrmode=0; curpos=0; } break;
-            case 2: break;
-            case 3: break;
-            case 4: dupd=0;
-                    scrcnt=0;
+            case 1: dupd=0; scrcnt=0;  max7219_buff_pixel(13, 7, 0); if(++scrmode>4) { scrmode=0; curpos=0; } break;
+            case 2: if(scrmode==4) { ee_write(4095,scrbright); max7219_buff_pixel(13, 7, 1); } break;
+            case 3: if(scrmode==4) { ee_write(4095,scrbright); max7219_buff_pixel(13, 7, 1); } break;
+            case 4: dupd=0; scrcnt=0;
                     if(scrmode==1) { int8_t tmp = rtc[2]; if(--tmp<0) tmp=59; rtc_set_hrs(tmp); }
                     if(scrmode==2) { int8_t tmp = rtc[1]; if(--tmp<0) tmp=59; rtc_set_min(tmp); }
                     if(scrmode==3) { rtc_set_sec(0); }
+                    if(scrmode==4) { int8_t tmp=scrbright; if(--tmp<0) tmp=0; scrbright=tmp;  max7219_buff_pixel(13, 7, 0); max7219_brightness(scrbright); }
                     break;
-            case 5: dupd=0;
-                    scrcnt=0;
+            case 5: dupd=0; scrcnt=0;
                     if(scrmode==1) { uint8_t tmp = rtc[2]; if(++tmp>59) tmp=0; rtc_set_hrs(tmp); }
                     if(scrmode==2) { uint8_t tmp = rtc[1]; if(++tmp>59) tmp=0; rtc_set_min(tmp); }
                     if(scrmode==3) { rtc_set_sec(0); }
+                    if(scrmode==4) { uint8_t tmp=scrbright; if(++tmp>3) tmp=3; scrbright=tmp;  max7219_buff_pixel(13, 7, 0); max7219_brightness(scrbright); }
                     break;
             }
         }

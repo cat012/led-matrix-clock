@@ -60,7 +60,8 @@ void max7219_buff_char(uint8_t xpos, uint8_t code)
     else if(code==32) c=11;
     else if(code==43) c=12;
     else if(code==45) c=13;
-    else c=14;
+    else if(code==76) c=14;
+    else c=15;
 
     for(uint8_t y=0; y<7; y++)
         {
