@@ -7,7 +7,7 @@
 
 #include "main.h"
 
-extern uint8_t rtc[8];   //ds1307 data
+uint8_t rtcdata[DS1307_RTC_MAX];   //ds1307 rtc data
 
 char strbuff[16];  //string buffer
 
@@ -110,7 +110,7 @@ int main(void)
 
     max7219_init();
 
-    uint8_t scrbright=ee_read(4095)&0b00000011;
+    uint8_t scrbright=(ds1307_read_reg(DS1307_RAM_OFFSET+0)&0b00000011);
 
     max7219_brightness(scrbright);
 
@@ -126,8 +126,8 @@ int main(void)
         if(dupd==0)
             {
             dupd=1;
-            rtc_read(rtc);
-            sprintf(strbuff, "%02u:%02u", rtc[HOURS_REG], rtc[MINUTES_REG]);
+            rtc_read(rtcdata);
+            sprintf(strbuff, "%02u:%02u", rtcdata[HOURS_REG], rtcdata[MINUTES_REG]);
             max7219_buff_print(10,strbuff);
             }
 
@@ -144,9 +144,9 @@ int main(void)
                 scrcnt=MENU_TIME;
 
                 uint8_t t=0;
-                if(scrmode==1) t=rtc[HOURS_REG];
-                if(scrmode==2) t=rtc[MINUTES_REG];
-                if(scrmode==3) t=rtc[SECONDS_REG];
+                if(scrmode==1) t=rtcdata[HOURS_REG];
+                if(scrmode==2) t=rtcdata[MINUTES_REG];
+                if(scrmode==3) t=rtcdata[SECONDS_REG];
                 if(scrmode==4) t=scrbright;
 
                 if(scrmode==1 || scrmode==2 || scrmode==3)  sprintf(strbuff, "%02u", t);
@@ -164,23 +164,24 @@ int main(void)
             {
             default: break;
             case 0: break;
-            case 1: dupd=0; scrcnt=0;  max7219_buff_pixel(13, 7, 0); if(++scrmode>4) { scrmode=0; curpos=0; }
+            case 1: dupd=0; scrcnt=0;
+                    if(++scrmode>4) { scrmode=0; curpos=0; }
                     break;
-            case 2: if(scrmode==4) { ee_write(4095,scrbright); max7219_buff_pixel(13, 7, 1); } break;
-            case 3: if(scrmode==4) { ee_write(4095,scrbright); max7219_buff_pixel(13, 7, 1); } break;
+            case 2: break;
+            case 3: break;
             case 4: dupd=0; scrcnt=0;
-                    if(scrmode==1) { int8_t tmp = rtc[2]; if(--tmp<0) tmp=59; rtc_set_hrs(tmp); }
-                    if(scrmode==2) { int8_t tmp = rtc[1]; if(--tmp<0) tmp=59; rtc_set_min(tmp); }
+                    if(scrmode==1) { int8_t tmp = rtcdata[2]; if(--tmp<0) tmp=59; rtc_set_hrs(tmp); }
+                    if(scrmode==2) { int8_t tmp = rtcdata[1]; if(--tmp<0) tmp=59; rtc_set_min(tmp); }
                     if(scrmode==3) { rtc_set_sec(0); }
-                    if(scrmode==4) { int8_t tmp=scrbright; if(--tmp<0) tmp=0; scrbright=tmp;
-                                     max7219_buff_pixel(13, 7, 0); max7219_brightness(scrbright); }
+                    if(scrmode==4) { int8_t tmp=scrbright; if(--tmp<0) tmp=0; max7219_brightness(tmp);
+                                     ds1307_write_reg(DS1307_RAM_OFFSET+0, tmp); scrbright=tmp; }
                     break;
             case 5: dupd=0; scrcnt=0;
-                    if(scrmode==1) { uint8_t tmp = rtc[2]; if(++tmp>59) tmp=0; rtc_set_hrs(tmp); }
-                    if(scrmode==2) { uint8_t tmp = rtc[1]; if(++tmp>59) tmp=0; rtc_set_min(tmp); }
+                    if(scrmode==1) { uint8_t tmp = rtcdata[2]; if(++tmp>59) tmp=0; rtc_set_hrs(tmp); }
+                    if(scrmode==2) { uint8_t tmp = rtcdata[1]; if(++tmp>59) tmp=0; rtc_set_min(tmp); }
                     if(scrmode==3) { rtc_set_sec(0); }
-                    if(scrmode==4) { uint8_t tmp=scrbright; if(++tmp>3) tmp=3; scrbright=tmp;
-                                     max7219_buff_pixel(13, 7, 0); max7219_brightness(scrbright); }
+                    if(scrmode==4) { uint8_t tmp=scrbright; if(++tmp>3) tmp=3; max7219_brightness(tmp);
+                                     ds1307_write_reg(DS1307_RAM_OFFSET+0, tmp); scrbright=tmp; }
                     break;
             }
         }

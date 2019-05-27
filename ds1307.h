@@ -32,16 +32,18 @@
 #define YEAR_REG     6
 #define CONTROL_REG  7
 
-#define SUNDAY  7
 
+#define DS1307_RAM_OFFSET  0x08
+#define DS1307_RAM_MAX     56
+#define DS1307_RTC_MAX     6
 
 
 
 void rtc_init(void);
 void rtc_read(uint8_t *data);
 
-void rtc_write_reg(uint8_t addr, uint8_t val);
-uint8_t rtc_read_reg(uint8_t addr);
+void ds1307_write_reg(uint8_t addr, uint8_t val);
+uint8_t ds1307_read_reg(uint8_t addr);
 
 void rtc_set_sec(uint8_t val);
 void rtc_set_min(uint8_t val);
@@ -54,3 +56,5 @@ void rtc_set_year(uint8_t val);
 
 
 #endif //DS1307_H_
+
+

@@ -7,10 +7,6 @@
 #include "ds1307.h"
 
 
-uint8_t rtc[8];  //for ds1307 registers data
-
-
-
 //-----------------------------------------------------------------------------
 void rtc_conv_data(uint8_t *d, uint8_t m)  //d-data //m-mask
     {
@@ -46,7 +42,7 @@ void rtc_read(uint8_t *data)
 
 
 //-----------------------------------------------------------------------------
-void rtc_write_reg(uint8_t addr, uint8_t val)
+void ds1307_write_reg(uint8_t addr, uint8_t val)
     {
     i2c_start();
     i2c_send_byte(DS1307 | WRITE);
@@ -59,7 +55,7 @@ void rtc_write_reg(uint8_t addr, uint8_t val)
 
 
 //-----------------------------------------------------------------------------
-uint8_t rtc_read_reg(uint8_t addr)
+uint8_t ds1307_read_reg(uint8_t addr)
     {
     i2c_start();
     i2c_send_byte(DS1307 | WRITE);
@@ -82,62 +78,62 @@ void rtc_init(void)
     {
     uint8_t temp=0;
 
-    temp = rtc_read_reg(0x00);
-    rtc_write_reg(0x00, temp & 0b01111111); //rtc start
+    temp = ds1307_read_reg(0x00);
+    ds1307_write_reg(0x00, temp & 0b01111111); //rtc start
 
-    temp = rtc_read_reg(0x02);
-    rtc_write_reg(0x02, temp & 0b10111111); //set 24-hour mode
+    temp = ds1307_read_reg(0x02);
+    ds1307_write_reg(0x02, temp & 0b10111111); //set 24-hour mode
 
-    rtc_write_reg(0x07, 0b10000000);
+    ds1307_write_reg(0x07, 0b10000000);
     }
 
 
 //-----------------------------------------------------------------------------
 void rtc_set_sec(uint8_t val)
     {
-    rtc_write_reg(0x00, (((val/10)<<4)+(val%10)) & 0b01111111);
+    ds1307_write_reg(0x00, (((val/10)<<4)+(val%10)) & 0b01111111);
     }
 
 
 //-----------------------------------------------------------------------------
 void rtc_set_min(uint8_t val)
     {
-    rtc_write_reg(0x01, (((val/10)<<4)+(val%10)) & 0b01111111);
+    ds1307_write_reg(0x01, (((val/10)<<4)+(val%10)) & 0b01111111);
     }
 
 
 //-----------------------------------------------------------------------------
 void rtc_set_hrs(uint8_t val)
     {
-    rtc_write_reg(0x02, (((val/10)<<4)+(val%10)) & 0b10111111);
+    ds1307_write_reg(0x02, (((val/10)<<4)+(val%10)) & 0b10111111);
     }
 
 
 //-----------------------------------------------------------------------------
 void rtc_set_day(uint8_t val)
     {
-    rtc_write_reg(0x03, (val & 0b00000111));
+    ds1307_write_reg(0x03, (val & 0b00000111));
     }
 
 
 //-----------------------------------------------------------------------------
 void rtc_set_dat(uint8_t val)
     {
-    rtc_write_reg(0x04, (((val/10)<<4)+(val%10)) & 0b00111111);
+    ds1307_write_reg(0x04, (((val/10)<<4)+(val%10)) & 0b00111111);
     }
 
 
 //-----------------------------------------------------------------------------
 void rtc_set_mon(uint8_t val)
     {
-    rtc_write_reg(0x05, (((val/10)<<4)+(val%10)) & 0b00011111);
+    ds1307_write_reg(0x05, (((val/10)<<4)+(val%10)) & 0b00011111);
     }
 
 
 //-----------------------------------------------------------------------------
 void rtc_set_year(uint8_t val)
     {
-    rtc_write_reg(0x06, ((val/10)<<4)+(val%10));
+    ds1307_write_reg(0x06, ((val/10)<<4)+(val%10));
     }
 
 
