@@ -170,14 +170,14 @@ int main(void)
             case 2: break;
             case 3: break;
             case 4: dupd=0; scrcnt=0;
-                    if(scrmode==1) { int8_t tmp = rtcdata[2]; if(--tmp<0) tmp=59; rtc_set_hrs(tmp); }
+                    if(scrmode==1) { int8_t tmp = rtcdata[2]; if(--tmp<0) tmp=23; rtc_set_hrs(tmp); }
                     if(scrmode==2) { int8_t tmp = rtcdata[1]; if(--tmp<0) tmp=59; rtc_set_min(tmp); }
                     if(scrmode==3) { rtc_set_sec(0); }
                     if(scrmode==4) { int8_t tmp=scrbright; if(--tmp<0) tmp=0; max7219_brightness(tmp);
                                      ds1307_write_reg(DS1307_RAM_OFFSET+0, tmp); scrbright=tmp; }
                     break;
             case 5: dupd=0; scrcnt=0;
-                    if(scrmode==1) { uint8_t tmp = rtcdata[2]; if(++tmp>59) tmp=0; rtc_set_hrs(tmp); }
+                    if(scrmode==1) { uint8_t tmp = rtcdata[2]; if(++tmp>23) tmp=0; rtc_set_hrs(tmp); }
                     if(scrmode==2) { uint8_t tmp = rtcdata[1]; if(++tmp>59) tmp=0; rtc_set_min(tmp); }
                     if(scrmode==3) { rtc_set_sec(0); }
                     if(scrmode==4) { uint8_t tmp=scrbright; if(++tmp>3) tmp=3; max7219_brightness(tmp);
